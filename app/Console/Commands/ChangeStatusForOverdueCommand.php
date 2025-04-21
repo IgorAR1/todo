@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Enums\TaskStatus;
+use App\Repositories\TaskRepository;
+use App\Repositories\TaskRepositoryInterface;
 use App\Services\TaskService;
 use Illuminate\Console\Command;
 
@@ -22,7 +24,7 @@ class ChangeStatusForOverdueCommand extends Command
      */
     protected $description = 'Command description';
 
-    public function __construct(readonly TaskService $taskService)
+    public function __construct(readonly TaskRepositoryInterface $repository, readonly TaskService $service)
     {
         parent::__construct();
     }
@@ -32,10 +34,10 @@ class ChangeStatusForOverdueCommand extends Command
      */
     public function handle()
     {
-        $overdueTasks = $this->taskService->getOverdue();
+        $overdueTasks = $this->repository->getOverdue();
 
         foreach ($overdueTasks as $task) {
-            $this->taskService->changeStatus($task,TaskStatus::Overdue);
+            $this->service->changeStatus($task,TaskStatus::Overdue);
         }
     }
 }

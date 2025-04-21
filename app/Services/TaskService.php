@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Enums\PriorityEnum;
 use App\Enums\TaskStatus;
 use App\Models\Task;
+use App\Traits\HasUser;
 use DateInterval;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -15,13 +16,10 @@ use Illuminate\Support\Facades\DB;
 
 class TaskService
 {
+    use HasUser;
+
     public function __construct()
     {}
-
-    private function resolveUser(): Authenticatable
-    {
-        return auth()->user();
-    }
 
     public function createTask(array $data): Task
     {
@@ -97,43 +95,4 @@ class TaskService
             return $carry;
         }, []);
     }
-
-    public function getTasksForView(int $limit = 10, int $page = 1): Arrayable
-    {
-        $user = $this->resolveUser();
-
-        return $this->getTaskForUser($user)
-            ->orderBy('priority')
-            ->paginate($limit,page: $page);
-    }
-
-    //TODO: все в скопы
-    public function getTaskForUser(Authenticatable $user)
-    {
-        return Task::query()->whereHas('collaborators', fn (Builder $query) =>
-        $query->where('user_id', $user->id))
-            ->orWhere('owner_id',$user->id);
-    }
-
-    public function getAllTasks(int $chunkSize = 1000): iterable
-    {
-        yield from Task::query()->lazy($chunkSize);
-    }
-
-    public function getOverdue(): iterable
-    {
-       yield from Task::query()
-           ->getOverdue()
-           ->cursor();
-    }
-
-    public function getHighPriorityTasksDueInNext(int $minutes): iterable
-    {
-        yield from Task::query()
-            ->getTasksDueInNext($minutes)
-            ->getByPriority(PriorityEnum::High)
-            ->cursor();
-    }
-
-
 }

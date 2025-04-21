@@ -4,17 +4,21 @@ namespace App\Models;
 
 use App\Enums\PriorityEnum;
 use App\Enums\TaskStatus;
+use App\Services\Filters\QueryFilter\Filterable;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Task extends Model
 {
     /** @use HasFactory<\Database\Factories\TaskFactory> */
-    use HasFactory;
+    use HasFactory, Filterable;
 
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'owner_id');
+    }
     public function collaborators()
     {
         return $this->belongsToMany(User::class)->withPivot('role');
@@ -45,4 +49,5 @@ class Task extends Model
 
         return $builder->whereBetween('due_date', [$from, $to]);
     }
+
 }

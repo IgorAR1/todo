@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Services\TaskService;
 use Illuminate\Console\Command;
 
 class NotifyHighPriorityDueTasksCommand extends Command
@@ -20,11 +21,21 @@ class NotifyHighPriorityDueTasksCommand extends Command
      */
     protected $description = 'Command description';
 
-    /**
-     * Execute the console command.
-     */
+    public function __construct(readonly TaskService $taskService)
+    {
+        parent::__construct();
+    }
+
     public function handle()
     {
+        $notification = ///;
+        $expiredTasks = $this->taskService->getHighPriorityTasksDueInNext(15);
 
+        foreach ($expiredTasks as $task) {
+            //Можно и ивенет пустить
+            $task->owner->notify($notification);
+        }
     }
+
+
 }
