@@ -3,9 +3,10 @@
 namespace App\Services\Filters\QueryFilter;
 
 use App\Contracts\Filter;
+use App\Services\Filters\FilterInterface;
 use Illuminate\Database\Eloquent\Builder;
 
-final class QueryFilterPartial implements Filter
+final class QueryFilterPartial implements FilterInterface
 {
     public function filter(Builder $builder,string $property ,array $values): void
     {

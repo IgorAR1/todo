@@ -4,7 +4,8 @@ namespace App\Models;
 
 use App\Enums\PriorityEnum;
 use App\Enums\TaskStatus;
-use App\Services\Filters\QueryFilter\Filterable;
+use App\Services\Filters\SimpleQueryFilter\Filterable;
+use App\Services\Sorters\Sortable;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 class Task extends Model
 {
     /** @use HasFactory<\Database\Factories\TaskFactory> */
-    use HasFactory, Filterable;
+    use HasFactory, Filterable, Sortable;
 
     public function owner()
     {

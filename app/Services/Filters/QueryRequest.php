@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Services\Filters\QueryFilter;
+namespace App\Services\Filters;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Collection;
 
 class QueryRequest extends FormRequest
 {
-
+ //TODO: разделить на разные реквесты!!
     public function rules(): array
     {
         return [

@@ -4,10 +4,11 @@ namespace App\Services\Filters\QueryFilter;
 
 use App\Contracts\Filter;
 use App\Enums\SqlOperators;
+use App\Services\Filters\FilterInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
-class QueryFilterRange implements FilterInterface
+final class QueryFilterRange implements FilterInterface
 {
 //    private ?int $min = null;
 //    private ?int $max = null;

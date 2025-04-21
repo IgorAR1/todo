@@ -3,19 +3,23 @@
 namespace App\Services\Filters\QueryFilter;
 
 
+use App\Services\Filters\FilterInterface;
+use App\Services\Filters\QueryRequest;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
-class QueryFilters///класс компоновщик
+class QueryFilters
 {
     private array $filters = [];
 
     public function __construct(
+        readonly FilterFactory $factory,
         protected readonly QueryRequest $request
     )
-    {}
+    {
+    }
 
     /**
      * @throws InvalidFilter
@@ -42,7 +46,6 @@ class QueryFilters///класс компоновщик
 
                 return;
             }
-
             $filter->filter($builder, $property, $values);
         });
 
@@ -57,7 +60,26 @@ class QueryFilters///класс компоновщик
 
     private function filterUsing(string $name): FilterInterface//Та можно и callable сюда передавать
     {
-        return $this->filters[$name];
+        return $this->resolveFilter($name);
+    }
+
+    private function resolveFilter(string $name): FilterInterface
+    {
+        $filterType = $this->filters[$name];
+
+        if ($filterType instanceof FilterInterface) {
+            return $filterType;
+        }
+
+        if (is_string($filterType)) {
+            if (class_exists($filterType)) {
+                return new $filterType();
+            }
+
+            return $this->factory->crateFilter($name);
+        }
+
+        throw new InvalidFilter($filterType. ' could not be resolved.');
     }
 
     private function resolveQueryValues(string $property): array

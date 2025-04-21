@@ -2,6 +2,7 @@
 
 namespace App\Services\Filters\QueryFilter;
 
+use App\Services\Filters\FilterInterface;
 use Illuminate\Database\Eloquent\Builder;
 
 
