@@ -27,14 +27,16 @@ class TaskService
 
         return DB::transaction(function () use ($data, $user): Task {
             $task = new Task();
-            $task->title = $data['title'];
-            $task->description = $data['description'];
-            $task->priority = $data['priority'];
-            $task->status = $data['status'];
+            $task->title = $data['title'] ?? null;
+            $task->description = $data['description'] ?? null;
+            $task->priority = $data['priority'] ?? null;
+            $task->status = $data['status'] ?? null;
             $task->owner_id = $user->id;
-            $task->due_date = $this->resolveExpirationDate($data);
+            $task->due_date = $this->resolveExpirationDate($data)?->format('Y-m-d H:i:s');
 
             $task->save();
+
+            $task->tags()->sync($data['tags'] ?? []);
 
             return $task;
         });
@@ -57,9 +59,9 @@ class TaskService
         });
     }
 
-    public function deleteTask(string $id): void
+    public function deleteTask(Task $task): void
     {
-        Task::query()->where('id', $id)->delete();
+        $task->delete();
     }
 
     protected function resolveExpirationDate(array $data): ?DateTimeInterface

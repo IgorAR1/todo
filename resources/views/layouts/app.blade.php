@@ -21,7 +21,7 @@
 
 <footer>
     <hr>
-    <p>&copy; {{ date('Y') }} Your App</p>
+    <p>&copy; {{ date('Y') }} </p>
 </footer>
 </body>
 </html>

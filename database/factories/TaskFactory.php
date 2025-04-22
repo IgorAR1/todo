@@ -23,6 +23,7 @@ class TaskFactory extends Factory
             'owner_id' => User::factory(),
             'title' => $this->faker->sentence(4),
             'description' => $this->faker->optional()->paragraph,
+            'priority' => $this->faker->randomElement([1, 2, 3]),
             'status' => $this->faker->randomElement(['pending', 'in_progress', 'done', 'canceled']),
             'due_date' => $this->faker->optional()->dateTimeBetween('now', '+1 month'),
             'created_at' => now(),

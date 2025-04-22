@@ -17,6 +17,7 @@ class UpdateTaskRequest extends FormRequest
         return [
             'title' => ['required', 'sometimes', 'string', 'max:255'],
             'description' => ['sometimes', 'nullable', 'string'],
+            'tags' => ['nullable', 'array'],
             'priority' => ['sometimes','nullable', 'integer', 'in:1,2,3'],//TODO
             'status' => ['sometimes', 'in:pending,in_progress,done,canceled,overdue'],//TODO
             'ttl' => ['sometimes', 'integer', 'min:1'],

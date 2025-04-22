@@ -23,6 +23,7 @@
                     <th>Status</th>
                     <th>Due Date</th>
                     <th>Owner</th>
+                    <th>Tags</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -35,8 +36,23 @@
                         <td>{{ $task->due_date ?? '—' }}</td>
                         <td>{{ $task->owner_id ?? 'N/A' }}</td>
                         <td>
+                            @if($task->tags->isNotEmpty())
+                                {{ $task->tags->pluck('name')->join(', ') }}
+                            @else
+                                —
+                            @endif
+                        </td>
+                        <td>
                             <a href="{{ route('tasks.show', $task->id) }}">View</a> |
-                            <a href="{{ route('tasks.edit', $task->id) }}">Edit</a>
+                            <a href="{{ route('tasks.edit', $task->id) }}">Edit</a> |
+
+                            <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" onclick="return confirm('Are you sure you want to delete this task?')">
+                                    Delete
+                                </button>
+                            </form>
                         </td>
                     </tr>
                 @endforeach

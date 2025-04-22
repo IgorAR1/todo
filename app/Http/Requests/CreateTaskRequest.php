@@ -19,6 +19,7 @@ class CreateTaskRequest extends FormRequest
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'priority' => ['nullable', 'integer', 'in:1,2,3'],//TODO :)
+            'tags' => ['nullable', 'array'],
             'status' => ['in:pending,in_progress,done,canceled,overdue'],//TODO
             'ttl' => ['integer', 'min:1', 'prohibited_if:due_date,!null'],
             'due_date' => ['nullable', 'date', 'after_or_equal:today', 'prohibited_if:ttl,!null'],

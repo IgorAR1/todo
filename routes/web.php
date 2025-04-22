@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
 
-Route::resource('tasks', TaskController::class)->middleware('auth');
+Route::resource('tasks', TaskController::class);
+//Route::resource('tasks', TaskController::class)->middleware('auth');
 Route::group(['middleware' => 'owner', 'prefix' => 'tasks/{task}/users'], function () {
     Route::get('/', [CollaborationController::class, 'index']);
     Route::post('/', [CollaborationController::class, 'shareTask'])->name('task.share');

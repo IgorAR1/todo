@@ -11,6 +11,7 @@
             <li><strong>Owner:</strong> {{ $task->owner->name ?? 'N/A' }}</li>
             <li><strong>Status:</strong> {{ ucfirst(str_replace('_', ' ', $task->status)) }}</li>
             <li><strong>Due Date:</strong> {{ $task->due_date ?? '—' }}</li>
+            <li><strong>Priority:</strong> {{ $task->priority ?? '—' }}</li>
             <li><strong>Description:</strong> {{ $task->description ?? 'No description' }}</li>
             <li><strong>Created:</strong> {{ $task->created_at->toDayDateTimeString() }}</li>
             <li><strong>Updated:</strong> {{ $task->updated_at->toDayDateTimeString() }}</li>

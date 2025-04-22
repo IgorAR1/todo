@@ -24,4 +24,9 @@ class TaskPolicy
     {
         return $user->hasPermissionsForTask($task, "update");
     }
+
+    public function delete(User $user, Task $task)
+    {
+        return $user->hasPermissionsForTask($task, "delete");
+    }
 }

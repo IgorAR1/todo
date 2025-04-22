@@ -7,6 +7,8 @@ use App\Models\Task;
 use App\Services\Filters\SimpleQueryFilter\TaskFilter;
 use App\Traits\HasUser;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\LazyCollection;
 
 class TaskRepository implements TaskRepositoryInterface
 {
@@ -16,31 +18,34 @@ class TaskRepository implements TaskRepositoryInterface
     {
     }
 
-    public function getTasksForView(int $limit = 10, int $page = 1): Arrayable
+    public function getTasksForView(int $perPage = 10, int $page = 1): Arrayable
     {
         $user = $this->resolveUser();
 
         return Task::query()->getTaskForUser($user)
             ->filter($this->filter)
             ->sort(['priority', 'title', 'due_date'])
-            ->paginate($limit,page: $page);
+            ->paginate($perPage, page:$page);
     }
 
-    public function getAllTasks(int $chunkSize = 1000): iterable
+    public function getAllTasks(int $chunkSize = 100): LazyCollection//Абсолютно бесполезный метод
     {
-        yield from Task::query()->lazy($chunkSize);
+        return Task::query()->with([])->lazy($chunkSize);
     }
 
-    public function getOverdue(): iterable
+    //TODO: если отношения - lazy();
+    //Если это кто то читает, объясните плиз почему курсор ест больше памяти чем lazy??
+    public function getOverdue(array $columns = ['*']): LazyCollection//LazyCollection а не iterable
     {
-        yield from Task::query()
+        return Task::query()
+            ->select($columns)
             ->getOverdue()
             ->cursor();
     }
 
-    public function getHighPriorityTasksDueInNext(int $minutes): iterable
+    public function getHighPriorityTasksDueInNext(int $minutes): LazyCollection
     {
-        yield from Task::query()
+        return Task::query()
             ->getTasksDueInNext($minutes)
             ->getByPriority(PriorityEnum::High)
             ->cursor();

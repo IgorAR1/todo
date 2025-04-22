@@ -2,19 +2,21 @@
 
 namespace App\Http\Controllers\web;
 
+use App\Enums\PriorityEnum;
 use App\Enums\TaskStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
+use App\Models\Tag;
 use App\Models\Task;
-use App\Repositories\TaskRepository;
 use App\Repositories\TaskRepositoryInterface;
+use App\Services\Logger\ActivityLogger;
 use App\Services\TaskService;
 use Illuminate\Support\Facades\Gate;
 
 class TaskController extends Controller
 {
-    public function __construct(readonly TaskService $taskService, readonly TaskRepositoryInterface $repository)
+    public function __construct(readonly TaskService $service, readonly TaskRepositoryInterface $repository)
     {
     }
 
@@ -27,14 +29,18 @@ class TaskController extends Controller
 
     public function create()
     {
-        return view('tasks.create', ['statuses' => TaskStatus::cases()]);
+        $tags = Tag::all();
+
+        return view('tasks.create', ['statuses' => TaskStatus::cases(), 'priorities' => PriorityEnum::cases(),'tags' => $tags]);
     }
 
-    public function store(CreateTaskRequest $request): void
+    public function store(CreateTaskRequest $request)
     {
         $data = $request->validated();
 
-        $this->taskService->createTask($data);
+        $this->service->createTask($data);
+
+        return redirect()->route('tasks.index');
     }
 
     public function show(Task $task)
@@ -57,12 +63,15 @@ class TaskController extends Controller
 
         Gate::authorize('update', $task);
 
-        $this->taskService->updateTask($id, $data);
+        $this->service->updateTask($id, $data);
     }
+
     public function destroy(Task $task)
     {
         Gate::authorize('delete', $task);
 
-        $this->taskService->deleteTask($task);
+        $this->service->deleteTask($task);
+
+        return redirect()->route('tasks.index');
     }
 }
