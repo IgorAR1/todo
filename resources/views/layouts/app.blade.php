@@ -10,18 +10,19 @@
 <header>
     <h1>Task Manager</h1>
     <nav>
-        <a href="{{ route('tasks.index') }}">All Tasks</a> |
-        <a href="{{ route('tasks.create') }}">New Task</a>
+
 
         @auth
+            <a href="{{ route('tasks.index') }}">All Tasks</a> |
+            <a href="{{ route('tasks.create') }}">New Task</a>
             | <span>Welcome, {{ auth()->user()->name }}</span>
             <form action="{{ route('logout') }}" method="POST" style="display:inline;">
                 @csrf
                 <button type="submit">Logout</button>
             </form>
         @else
-            | <a href="{{ route('login.index') }}">Login</a>
-            <a href="{{ route('register.index') }}">Register</a>
+            | <a href="{{ route('login') }}">Login</a>
+            <a href="{{ route('register') }}">Register</a>
         @endauth
     </nav>
     <hr>

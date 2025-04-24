@@ -16,7 +16,7 @@
 ## 
     ./cli key:generate
 ## 
-    ./cli migrate  
+    ./cli migrate
 
 ## http://localhost:8000
 

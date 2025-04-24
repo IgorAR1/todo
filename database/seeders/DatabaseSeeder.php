@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Tag;
 use App\Models\Task;
 use App\Models\User;
+
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -15,10 +16,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
         User::factory(10)->create();
-        User::factory()->create(['name'=>'ggg','email'=>'abletonlive234@gmail.com','password'=>'12345678']);
+        User::factory()->create(['name' => 'test', 'email' => 'testuser@mail.com', 'password' => '12345678']);
         Tag::factory(10)->create();
         Task::factory(100)->create();
     }
