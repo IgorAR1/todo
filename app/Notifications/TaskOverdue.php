@@ -32,7 +32,7 @@ class TaskOverdue extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $massage = "Your task {$this->task->title} is overdue soon.";
+        $massage = "Your task {$this->task->title} are overdue soon.";
 
         return (new MailMessage)
             ->line($massage)

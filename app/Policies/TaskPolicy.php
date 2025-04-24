@@ -19,7 +19,7 @@ class TaskPolicy
         return $user->hasPermissionsForTask($task, 'view');
     }
 
-    public function edit(User $user, Task $task)
+    public function edit(User $user, Task $task): bool
     {
         return $user->hasPermissionsForTask($task, 'update');
     }
