@@ -2,29 +2,29 @@
 
 ## Тестовое задание "ToDo list"
 ## Как поднять проект
-    #В терминале:
-- cp .env.example .env
-- в env:
+## 
+    cp .env.example .env
+## env:
     DB_CONNECTION=mysql
     DB_HOST=mysql-todo
     DB_PORT=3306
     DB_DATABASE=test
     DB_USERNAME=admin
     DB_PASSWORD=admin
-- В терминале ./run
-- ./cli key:generate
-- ./cli migrate
-- http://localhost:8000
-- Готово)
+## В терминале 
+    ./run
+## 
+    ./cli key:generate
+## 
+    ./cli migrate  
+
+## http://localhost:8000
 
 ## Если win без WSL
-- в env:
-  DB_CONNECTION=mysql
-  DB_HOST=mysql-todo
-  DB_PORT=3306
-  DB_DATABASE=test
-  DB_USERNAME=admin
-  DB_PASSWORD=admin
-- docker compose up -d --build
-- docker exec php-todo php artisan key:generate
-- docker exec php-todo php artisan migrate
+Все то же самое, но команды такие:
+## 
+    docker compose up -d --build
+## 
+    docker exec php-todo php artisan key:generate
+## 
+    docker exec php-todo php artisan migrate
