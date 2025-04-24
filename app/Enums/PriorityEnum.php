@@ -2,6 +2,8 @@
 
 namespace App\Enums;
 
+use Illuminate\Contracts\Support\Arrayable;
+
 enum PriorityEnum:int
 {
     case High = 3;

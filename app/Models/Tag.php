@@ -9,4 +9,9 @@ class Tag extends Model
 {
     /** @use HasFactory<\Database\Factories\TagFactory> */
     use HasFactory;
+
+    public function tasks()
+    {
+        return $this->belongsToMany(Task::class);
+    }
 }

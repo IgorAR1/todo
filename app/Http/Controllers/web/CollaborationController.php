@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\web;
 
+use App\Enums\RoleEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CollaboratorsRequest;
 use App\Models\Task;
@@ -11,24 +12,24 @@ use Illuminate\Support\Facades\Auth;
 
 class CollaborationController extends Controller
 {
-
     public function __construct(readonly TaskService $taskService)
     {
     }
 
     public function index(Task $task)
     {
-        $users =  User::all()->except(Auth::id());
+        $users =  User::query()->simplePaginate(10);
+        $roles = RoleEnum::cases();
 
-        return view('tasks.collaborations_index', compact('users', 'task'));
+        return view('tasks.collaborations.index', compact('users', 'task', 'roles'));
     }
 
     public function shareTask(Task $task, CollaboratorsRequest $request)
     {
         $data = $request->validated();
 
-        $this->taskService->shareTask($task, $data['users']);
+        $this->taskService->shareTask($task, $data['shares']);
 
-        return redirect()->back();
+        return redirect()->route('tasks.show', ['task' => $task]);
     }
 }

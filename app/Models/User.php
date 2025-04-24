@@ -51,9 +51,9 @@ class User extends Authenticatable
         }
 
         if ($this->isCollaborator($task)) {
-
             $role = $this->getRole($task);
-            return in_array($ability, config('permissions.roles.'.$role));
+
+            return in_array($ability, config('permissions.roles.'.$role, []));
         }
 
         return false;
@@ -62,7 +62,7 @@ class User extends Authenticatable
     public function getRole(Task $task): string
     {
         return $this->collaborationTasks()
-            ->firstWhere('task_id',$task->id)
+            ->where('task_id',$task->id)
             ->pivot
             ->role;
     }

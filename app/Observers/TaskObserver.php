@@ -7,6 +7,7 @@ use App\Services\Logger\ActivityLogger;
 
 class TaskObserver
 {
+    //Todo: Наблюдатель реагирует на фабрики
     public function __construct(readonly ActivityLogger $logger)
     {
     }
@@ -16,7 +17,7 @@ class TaskObserver
      */
     public function created(Task $task): void
     {
-        $this->logger->log(auth()->user(), 'created', $task);
+//        $this->logger->log(auth()->user(), 'created', $task);
     }
 
     /**
@@ -24,7 +25,7 @@ class TaskObserver
      */
     public function updated(Task $task): void
     {
-        $this->logger->log(auth()->user(), 'updated', $task, extra: ['changes' => $task->getChanges()]);
+//        $this->logger->log(auth()->user(), 'updated', $task, extra: ['changes' => $task->getChanges()]);
     }
 
     /**
@@ -32,7 +33,7 @@ class TaskObserver
      */
     public function deleted(Task $task): void
     {
-        $this->logger->log(auth()->user(), 'deleted', $task);
+//        $this->logger->log(auth()->user(), 'deleted', $task);
     }
 
     /**

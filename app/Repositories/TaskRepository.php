@@ -5,14 +5,14 @@ namespace App\Repositories;
 use App\Enums\PriorityEnum;
 use App\Models\Task;
 use App\Services\Filters\SimpleQueryFilter\TaskFilter;
-use App\Traits\HasUser;
+use App\Traits\InteractWithUser;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\LazyCollection;
 
 class TaskRepository implements TaskRepositoryInterface
 {
-    use HasUser;
+    use InteractWithUser;
 
     public function __construct(readonly TaskFilter $filter)
     {
@@ -22,15 +22,18 @@ class TaskRepository implements TaskRepositoryInterface
     {
         $user = $this->resolveUser();
 
-        return Task::query()->getTaskForUser($user)
+        return Task::query()
+            ->forUser($user)
             ->filter($this->filter)
             ->sort(['priority', 'title', 'due_date'])
             ->paginate($perPage, page:$page);
     }
 
-    public function getAllTasks(int $chunkSize = 100): LazyCollection//Абсолютно бесполезный метод
+    public function getAllTasks(int $chunkSize = 100): LazyCollection//бесполезный метод
     {
-        return Task::query()->with([])->lazy($chunkSize);
+        return Task::query()
+            ->with('collaborators', 'tags')
+            ->lazy($chunkSize);
     }
 
     //TODO: если отношения - lazy();
@@ -39,15 +42,15 @@ class TaskRepository implements TaskRepositoryInterface
     {
         return Task::query()
             ->select($columns)
-            ->getOverdue()
+            ->overdue()
             ->cursor();
     }
 
     public function getHighPriorityTasksDueInNext(int $minutes): LazyCollection
     {
         return Task::query()
-            ->getTasksDueInNext($minutes)
-            ->getByPriority(PriorityEnum::High)
+            ->dueInNext($minutes)
+            ->byPriority(PriorityEnum::High)
             ->cursor();
     }
 }

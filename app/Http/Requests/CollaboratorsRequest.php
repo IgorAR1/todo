@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\RoleEnum;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CollaboratorsRequest extends FormRequest
 {
@@ -15,9 +17,9 @@ class CollaboratorsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'users'=> 'required|array',
-                'users.*.id' => 'required|exists:users,id',
-                'users.*.role' => 'required|string|in:editor,observer',
+            'shares' => 'required|array',
+            'shares.*.user_id' => 'required|exists:users,id',
+            'shares.*.user_role' => ['required', 'string', Rule::in(RoleEnum::cases())],
         ];
     }
 }

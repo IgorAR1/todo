@@ -9,7 +9,7 @@ trait Sortable
     public function scopeSort(Builder $builder,array $allowedSortField):Builder
     {
         $sorter = $this->sortUsing();
-        $sorter->sort($builder,$allowedSortField);
+        $sorter->sort($builder, $allowedSortField);
 
         return $builder;
     }

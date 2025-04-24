@@ -10,13 +10,13 @@ use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Tag;
 use App\Models\Task;
 use App\Repositories\TaskRepositoryInterface;
-use App\Services\Logger\ActivityLogger;
 use App\Services\TaskService;
 use Illuminate\Support\Facades\Gate;
 
 class TaskController extends Controller
 {
-    public function __construct(readonly TaskService $service, readonly TaskRepositoryInterface $repository)
+    public function __construct(readonly TaskService $service,
+                                readonly TaskRepositoryInterface $repository)
     {
     }
 
@@ -45,25 +45,31 @@ class TaskController extends Controller
 
     public function show(Task $task)
     {
-        Gate::authorize('update', $task);
+        $task = $task->load(['collaborators','tags','activities']);
+
+        Gate::authorize('show', $task);
 
         return view('tasks.show', compact('task'));
     }
 
     public function edit(Task $task)
     {
-        return view('tasks.edit', compact('task'));
+        $tags = Tag::all();
+        $priorities = PriorityEnum::cases();
+        $statuses = TaskStatus::cases();
+
+        return view('tasks.edit', compact('task','tags', 'priorities', 'statuses'));
     }
 
     public function update(int $id, UpdateTaskRequest $request)
     {
         $data = $request->validated();
-
         $task = Task::query()->findOrFail($id);
-
         Gate::authorize('update', $task);
 
         $this->service->updateTask($id, $data);
+
+        return redirect()->route('tasks.index');
     }
 
     public function destroy(Task $task)

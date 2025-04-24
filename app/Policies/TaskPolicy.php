@@ -12,21 +12,20 @@ class TaskPolicy
      */
     public function __construct()
     {
-        //
     }
 
-    public function show(User $user, Task $task)
+    public function show(User $user, Task $task): bool
     {
-        return $user->hasPermissionsForTask($task, "view");
+        return $user->hasPermissionsForTask($task, 'view');
     }
 
-    public function update(User $user, Task $task)
+    public function update(User $user, Task $task): bool
     {
-        return $user->hasPermissionsForTask($task, "update");
+        return $user->hasPermissionsForTask($task, 'update');
     }
 
-    public function delete(User $user, Task $task)
+    public function delete(User $user, Task $task): bool
     {
-        return $user->hasPermissionsForTask($task, "delete");
+        return $user->hasPermissionsForTask($task, 'delete');
     }
 }

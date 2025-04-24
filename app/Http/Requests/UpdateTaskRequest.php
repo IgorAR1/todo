@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\PriorityEnum;
+use App\Enums\TaskStatus;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateTaskRequest extends FormRequest
 {
@@ -15,13 +18,13 @@ class UpdateTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required', 'sometimes', 'string', 'max:255'],
+            'title' => ['sometimes', 'required', 'string', 'max:255'],
             'description' => ['sometimes', 'nullable', 'string'],
-            'tags' => ['nullable', 'array'],
-            'priority' => ['sometimes','nullable', 'integer', 'in:1,2,3'],//TODO
-            'status' => ['sometimes', 'in:pending,in_progress,done,canceled,overdue'],//TODO
-            'ttl' => ['sometimes', 'integer', 'min:1'],
-            'due_date' => ['sometimes', 'nullable', 'date', 'after_or_equal:today'],
+            'tags' => ['sometimes', 'nullable', 'array'],
+            'priority' => ['sometimes', 'nullable', 'string', Rule::in(PriorityEnum::cases())],
+            'status' => ['sometimes', Rule::in(TaskStatus::cases())],
+            'ttl' => ['sometimes','nullable','integer', 'min:1', 'prohibited_if:due_date,!null'],
+            'due_date' => ['sometimes','nullable', 'date_format:Y-m-d\TH:i', 'after_or_equal:today', 'prohibited_if:ttl,!null'],
         ];
     }
 }

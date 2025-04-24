@@ -15,13 +15,22 @@ class LoginController extends Controller
     }
     public function login(LoginRequest $request): Response
     {
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->validated();
 
         if (!Auth::attempt($credentials)) {
             return back()->withErrors(['massage'=> 'Email or password is incorrect']);
         }
-//        return response('great!');
-        return redirect('/');
+
+        return redirect()->route('tasks.index');
     }
 
+    public function logout(): Response
+    {
+        Auth::logout();
+
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
+
+        return redirect()->route('login');
+    }
 }

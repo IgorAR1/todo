@@ -2,11 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Task;
-use App\Models\User;
 use App\Notifications\TaskOverdue;
 use App\Repositories\TaskRepository;
-use App\Services\TaskService;
 use Illuminate\Console\Command;
 
 class NotifyHighPriorityDueTasksCommand extends Command
@@ -23,7 +20,7 @@ class NotifyHighPriorityDueTasksCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Send notifications for high-priority tasks due in the next 15 minutes.';
 
     public function __construct(readonly TaskRepository $repository)
     {
@@ -36,7 +33,7 @@ class NotifyHighPriorityDueTasksCommand extends Command
         $expiredTasks = $this->repository->getHighPriorityTasksDueInNext(15);
 
         foreach ($expiredTasks as $task) {
-            $task->owner->notify($notification);
+            $task->owner?->notify($notification->forTask($task));
         }
     }
 }

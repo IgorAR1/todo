@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 
-use App\Models\Task;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;

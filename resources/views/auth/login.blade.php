@@ -10,7 +10,7 @@
     <p style="color:red;">{{ $errors->first() }}</p>
 @endif
 
-<form method="POST" action="{{ route('login') }}">
+<form method="POST" action="{{ route('login.post') }}">
     @csrf
 
     <label>Email:</label><br>
@@ -20,6 +20,7 @@
     <input type="password" name="password"><br><br>
 
     <button type="submit">Login</button>
+    <a href={{route('register')}}>Register</a>
 </form>
 </body>
 </html>

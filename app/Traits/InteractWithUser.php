@@ -4,7 +4,7 @@ namespace App\Traits;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 
-trait HasUser
+trait InteractWithUser
 {
     private function resolveUser(): Authenticatable
     {

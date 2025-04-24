@@ -9,7 +9,7 @@
 @if($errors->any())
     <p style="color:red;">{{ $errors->first() }}</p>
 @endif
-<form method="POST" action="{{ route('register') }}">
+<form method="POST" action="{{ route('register.post') }}">
     @csrf
 
     <label>Name:</label><br>
@@ -25,6 +25,7 @@
     <input type="password" name="password_confirmation"><br><br>
 
     <button type="submit">Register</button>
+    <a href={{route('login')}} >Login</a>
 </form>
 </body>
 </html>

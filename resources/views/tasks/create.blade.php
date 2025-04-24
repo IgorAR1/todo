@@ -64,11 +64,11 @@
             </div>
 
             <div>
-                <label for="due_date">Due Date:</label>
-                <input type="date" name="due_date" id="due_date" value="{{ old('due_date') }}">
-                @error('due_date')
-                <div style="color:red;">{{ $message }}</div> @enderror
+                <label for="due_date">Due Date & Time:</label>
+                <input type="datetime-local" name="due_date" id="due_date"
+                @error('due_date') <div style="color:red;">{{ $message }}</div> @enderror
             </div>
+
 
             <button type="submit">Create Task</button>
         </form>
