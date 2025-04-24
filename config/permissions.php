@@ -2,7 +2,7 @@
 
 return [
     'roles' => [
-        'editor' => ['read', 'update'],
-        'viewer' => ['read'],
+        'editor' => ['view', 'update'],
+        'viewer' => ['view'],
     ]
 ];

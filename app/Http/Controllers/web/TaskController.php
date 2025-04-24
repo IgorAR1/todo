@@ -45,15 +45,17 @@ class TaskController extends Controller
 
     public function show(Task $task)
     {
-        $task = $task->load(['collaborators','tags','activities']);
-
         Gate::authorize('show', $task);
+
+        $task = $task->load(['collaborators','tags','activities']);
 
         return view('tasks.show', compact('task'));
     }
 
     public function edit(Task $task)
     {
+        Gate::authorize('update', $task);
+
         $tags = Tag::all();
         $priorities = PriorityEnum::cases();
         $statuses = TaskStatus::cases();

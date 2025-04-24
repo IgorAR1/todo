@@ -9,6 +9,7 @@ use App\Models\Task;
 use App\Models\User;
 use App\Services\TaskService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class CollaborationController extends Controller
 {
@@ -24,10 +25,9 @@ class CollaborationController extends Controller
         return view('tasks.collaborations.index', compact('users', 'task', 'roles'));
     }
 
-    public function shareTask(Task $task, CollaboratorsRequest $request)
+    public function share(Task $task, CollaboratorsRequest $request)
     {
         $data = $request->validated();
-
         $this->taskService->shareTask($task, $data['shares']);
 
         return redirect()->route('tasks.show', ['task' => $task]);

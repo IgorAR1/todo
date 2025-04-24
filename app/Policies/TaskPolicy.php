@@ -19,13 +19,19 @@ class TaskPolicy
         return $user->hasPermissionsForTask($task, 'view');
     }
 
+    public function edit(User $user, Task $task)
+    {
+        return $user->hasPermissionsForTask($task, 'update');
+    }
+
     public function update(User $user, Task $task): bool
     {
+
         return $user->hasPermissionsForTask($task, 'update');
     }
 
     public function delete(User $user, Task $task): bool
     {
-        return $user->hasPermissionsForTask($task, 'delete');
+        return $user->isOwner($task);
     }
 }
