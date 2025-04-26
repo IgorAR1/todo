@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Enums\TaskStatus;
-use App\Repositories\TaskRepository;
+use App\Repositories\EloquentTaskRepository;
 use App\Repositories\TaskRepositoryInterface;
 use App\Services\TaskService;
 use Illuminate\Console\Command;

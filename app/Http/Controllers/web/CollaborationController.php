@@ -22,6 +22,7 @@ class CollaborationController extends Controller
         $users = User::query()
             ->whereNot('id', $task->owner_id)
             ->simplePaginate(10);
+
         $roles = RoleEnum::cases();
 
         return view('tasks.collaborations.index', compact('users', 'task', 'roles'));

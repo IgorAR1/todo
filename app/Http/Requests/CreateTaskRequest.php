@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\PriorityEnum;
+use App\Enums\RoleEnum;
 use App\Enums\TaskStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -26,7 +27,7 @@ class CreateTaskRequest extends FormRequest
             'tags' => ['nullable', 'array'],
             'shares' => 'nullable|array',
                 'shares.*.user_id' => 'required|exists:users,id',
-                'shares.*.user_role' => 'required|string|in:editor,observer',
+                'shares.*.user_role' => ['required','string',Rule::in(RoleEnum::cases())],
             'ttl' => ['sometimes','nullable','integer', 'min:1', 'prohibited_if:due_date,!null'],
             'due_date' => ['sometimes','nullable', 'date_format:Y-m-d\TH:i', 'after_or_equal:today', 'prohibited_if:ttl,!null'],
         ];

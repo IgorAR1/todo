@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use App\Models\Task;
 use App\Models\User;
-use App\Repositories\TaskRepository;
+use App\Repositories\EloquentTaskRepository;
 use App\Repositories\TaskRepositoryInterface;
 use App\Services\Filters\QueryFilter\FilterFactory;
 use App\Services\Filters\QueryFilter\FilterFactoryInterface;
@@ -20,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(TaskRepositoryInterface::class, TaskRepository::class);
+        $this->app->bind(TaskRepositoryInterface::class, EloquentTaskRepository::class);
         $this->app->bind(FilterFactoryInterface::class, FilterFactory::class);
         $this->app->bind(SorterInterface::class, QuerySorter::class);
     }

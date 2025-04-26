@@ -23,6 +23,7 @@ class Task extends Model
     protected $casts = [
         'due_date' => 'datetime',
     ];
+
     public function owner()
     {
         return $this->belongsTo(User::class, 'owner_id');
@@ -36,6 +37,12 @@ class Task extends Model
     public function collaborators()
     {
         return $this->belongsToMany(User::class)->withPivot('role');
+    }
+
+    public function setCollaborators(array $shares): void
+    {
+        $this->collaborators()->sync($shares);
+
     }
 
     public function activities()

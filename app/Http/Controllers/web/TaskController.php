@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Gate;
 
 class TaskController extends Controller
 {
-    public function __construct(readonly TaskService $service,
+    public function __construct(readonly TaskService             $service,
                                 readonly TaskRepositoryInterface $repository)
     {
     }
@@ -31,7 +31,7 @@ class TaskController extends Controller
     {
         $tags = Tag::all();
 
-        return view('tasks.create', ['statuses' => TaskStatus::cases(), 'priorities' => PriorityEnum::cases(),'tags' => $tags]);
+        return view('tasks.create', ['statuses' => TaskStatus::cases(), 'priorities' => PriorityEnum::cases(), 'tags' => $tags]);
     }
 
     public function store(CreateTaskRequest $request)
@@ -47,7 +47,7 @@ class TaskController extends Controller
     {
         Gate::authorize('show', $task);
 
-        $task = $task->load(['collaborators','tags','activities']);
+        $task = $task->load(['collaborators', 'tags', 'activities']);
 
         return view('tasks.show', compact('task'));
     }
@@ -60,7 +60,7 @@ class TaskController extends Controller
         $priorities = PriorityEnum::cases();
         $statuses = TaskStatus::cases();
 
-        return view('tasks.edit', compact('task','tags', 'priorities', 'statuses'));
+        return view('tasks.edit', compact('task', 'tags', 'priorities', 'statuses'));
     }
 
     public function update(int $id, UpdateTaskRequest $request)
@@ -71,7 +71,7 @@ class TaskController extends Controller
 
         $this->service->updateTask($id, $data);
 
-        return redirect()->route('tasks.index');
+        return redirect()->route('tasks.show', ['task' => $id]);
     }
 
     public function destroy(Task $task)

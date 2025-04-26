@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Notifications\TaskOverdue;
-use App\Repositories\TaskRepository;
+use App\Repositories\EloquentTaskRepository;
 use Illuminate\Console\Command;
 
 class NotifyHighPriorityDueTasksCommand extends Command
@@ -22,7 +22,7 @@ class NotifyHighPriorityDueTasksCommand extends Command
      */
     protected $description = 'Send notifications for high-priority tasks due in the next 15 minutes.';
 
-    public function __construct(readonly TaskRepository $repository)
+    public function __construct(readonly EloquentTaskRepository $repository)
     {
         parent::__construct();
     }

@@ -2,18 +2,14 @@
 
 namespace App\Services;
 
-use App\Enums\PriorityEnum;
 use App\Enums\TaskStatus;
 use App\Models\Task;
+use App\Repositories\TaskRepositoryInterface;
 use App\Services\Logger\ActivityLogger;
 use App\Traits\InteractWithUser;
 use DateInterval;
 use DateTimeImmutable;
-use DateTimeInterface;
 use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\DB;
 
 class TaskService
 {
@@ -21,7 +17,7 @@ class TaskService
 
     private Authenticatable $user;
 
-    public function __construct(readonly ActivityLogger $logger)
+    public function __construct(readonly ActivityLogger $logger,readonly TaskRepositoryInterface $repository)
     {
     }
 
@@ -29,21 +25,10 @@ class TaskService
     {
         $user = $this->resolveUser();
 
-        $task = DB::transaction(function () use ($data, $user): Task {
-            $task = new Task();
-            $task->title = $data['title'] ?? null;
-            $task->description = $data['description'] ?? null;
-            $task->priority = $data['priority'] ?? null;
-            $task->status = $data['status'] ?? null;
-            $task->owner_id = $user->id;
-            $task->due_date = $this->resolveExpirationDate($data);
+        $data['owner_id'] = $user->id;
+        $data['due_date'] = $this->resolveExpirationDate($data);
 
-            $task->save();
-
-            $task->tags()->sync($data['tags'] ?? []);
-
-            return $task;
-        });
+        $task = $this->repository->create($data);
 
         $this->logger->log($user, 'create', $task);
 
@@ -54,22 +39,9 @@ class TaskService
     {
         $user = $this->resolveUser();
 
-        $task = DB::transaction(function () use ($data, $id, $user): Task {
-            $task = Task::query()->lockForUpdate()->find($id);
+        $data['due_date'] = $this->resolveExpirationDate($data);
 
-            $task->title = array_key_exists('title', $data) ? $data['title'] : $task->title;
-            $task->description = array_key_exists('description', $data) ? $data['description'] : $task->description;
-            $task->priority = array_key_exists('priority', $data) ? $data['priority'] : $task->priority;
-            $task->status = array_key_exists('status', $data) ? $data['status'] : $task->status;
-            $task->due_date = array_key_exists('due_date', $data) || array_key_exists('ttl', $data)
-                ? $this->resolveExpirationDate($data)
-                : $task->due_date;
-            $task->tags()->sync($data['tags'] ?? []);
-
-            $task->save();
-
-            return $task;
-        });
+        $task = $this->repository->update($id, $data);
 
         $this->logger->log($user, 'update', $task, extra: ['changes' => $task->getChanges()]);
 
@@ -82,7 +54,7 @@ class TaskService
 
         $this->logger->log($user, 'delete', $task);
 
-        $task->delete();
+        $this->repository->delete($task);
     }
 
     protected function resolveExpirationDate(array $data): ?DateTimeImmutable
@@ -91,7 +63,6 @@ class TaskService
             return (new DateTimeImmutable($data['due_date']));
         } elseif (isset($data['ttl'])) {
             return (new DateTimeImmutable())->add(new DateInterval('PT' . intval($data['ttl']) . 'S'));
-
         }
 
         return null;
@@ -110,7 +81,7 @@ class TaskService
 
         $shares = $this->normalizeShares($shares);
 
-        $task->collaborators()->sync($shares);
+        $task->setCollaborators($shares);
 
         $this->logger->log($user, 'share', $task, extra: ['With users:' => $shares]);
     }
